@@ -9,7 +9,7 @@ namespace CoffeeVendingMachineMS.Interfaces
 {
     public interface IMoneyBusinessLogic
     {
-        public CashCodes CheckAndUpdateInsertedCash(string inserted);
+        public CashCodes CheckAndUpdateBalance(string inserted);
         public CashCodes CheckOrderPrice(string orderPrice);
     }
 }

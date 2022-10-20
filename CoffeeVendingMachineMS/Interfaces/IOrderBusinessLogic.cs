@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoffeeVendingMachineMS.Interfaces
 {
-    public interface IOrderRepository
+    public interface IOrderBusinessLogic
     {
     }
 }

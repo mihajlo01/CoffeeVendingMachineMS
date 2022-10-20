@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoffeeVendingMachineMS.Interfaces
 {
-    public interface ICoffeeTypeRepository
+    public interface ICoffeeTypeBusinessLogic
     {
         public Task<IEnumerable<CoffeeType>> GetCoffeeTypes();
         public long GetCoffeeTypesCount();

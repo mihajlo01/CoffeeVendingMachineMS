@@ -13,7 +13,7 @@ namespace CoffeeVendingMachineMS
     {
         static void Main(string[] args)
         {
-            var coffeeMachine = new CoffeeMachine();
+            var coffeeMachine = new CoffeeMachineController();
             coffeeMachine.Start();
         }
     }

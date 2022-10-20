@@ -1,5 +1,6 @@
 ﻿using CoffeeVendingMachineMS.Enums;
 using CoffeeVendingMachineMS.Interfaces;
+using CoffeeVendingMachineMS.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace CoffeeVendingMachineMS.BusinessLogic
 {
-    public class MoneyBusinessLogic
+    public class MoneyBusinessLogic : IMoneyBusinessLogic
     {
-        private readonly ICoffeeTypeRepository coffeeTypeRepository;
+        private readonly ICoffeeTypeBusinessLogic coffeeTypeBusinessLogic;
         public decimal ballance;
         public decimal orderTotal;
-        private decimal balanceToCheck;
+        private decimal orderPrice;
 
-        public MoneyBusinessLogic(ICoffeeTypeRepository coffeeTypeRepository) : base()
+        public MoneyBusinessLogic()
         {
-            this.coffeeTypeRepository = coffeeTypeRepository;
+            coffeeTypeBusinessLogic = new CoffeeTypeBusinessLogic();
         }
 
         public CashCodes CheckAndUpdateBalance(string inserted)
@@ -26,35 +27,35 @@ namespace CoffeeVendingMachineMS.BusinessLogic
 
             if(!Decimal.TryParse(inserted, out insertedCash))
             {
-                return CashCodes.WrongInput;
-            }
-            else
-            {
-                var minimumValue = coffeeTypeRepository.GetCoffeeTypes().Result.OrderByDescending(x => x.Price).FirstOrDefault().Price;
-
-                if(ballance < minimumValue)
+                var minimumValue = coffeeTypeBusinessLogic.GetCoffeeTypes().Result.OrderByDescending(x => x.Price).FirstOrDefault().Price;
+                if (ballance < minimumValue)
                 {
                     return CashCodes.BelowMinimum;
                 }
 
+                return CashCodes.WrongInput;
+            }
+            else
+            {
                 ballance += insertedCash;
                 return CashCodes.AcceptableAmount;
             }
         }
 
-        public CashCodes CheckOrderPrice(string orderPrice)
+        public CashCodes CheckOrderPrice(string stringOrderPrice)
         {
-            if (!Decimal.TryParse(orderPrice, out balanceToCheck))
+            if (!Decimal.TryParse(stringOrderPrice, out orderPrice))
             {
                 return CashCodes.WrongInput;
             }
 
-            if (balanceToCheck > ballance)
+            if (orderPrice > ballance)
             {
                 return CashCodes.NotEnoughMoney;
             }
             else
             {
+                orderTotal = orderPrice;
                 return CashCodes.AcceptableAmount;
             }
         }

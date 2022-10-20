@@ -1,4 +1,6 @@
-﻿using CoffeeVendingMachineMS.Interfaces;
+﻿using CoffeeVendingMachineMS.BusinessLogic;
+using CoffeeVendingMachineMS.Enums;
+using CoffeeVendingMachineMS.Interfaces;
 using CoffeeVendingMachineMS.Models;
 using CoffeeVendingMachineMS.Repositories;
 using System;
@@ -8,23 +10,36 @@ namespace CoffeeVendingMachineMS
 {
     public class CoffeeMachineController
     {
-        private readonly ICoffeeTypeRepository coffeeTypeRepository;
+        private readonly ICoffeeTypeBusinessLogic coffeeTypeBusinessLogic;
+        private readonly IMoneyBusinessLogic moneyBusinessLogic;
         static int pickedCoffeeCode = 0;
+        CashCodes code;
 
         public CoffeeMachineController()
         {
-            coffeeTypeRepository = new CoffeeTypeBusinessLogic();
+            coffeeTypeBusinessLogic = new CoffeeTypeBusinessLogic();
+            moneyBusinessLogic = new MoneyBusinessLogic();
         }
 
         public void Start()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            var coffeeTypes = coffeeTypeRepository.GetCoffeeTypes().Result;
-            long coffeeTypesCount = coffeeTypeRepository.GetCoffeeTypesCount();
+            var coffeeTypes = coffeeTypeBusinessLogic.GetCoffeeTypes().Result;
+            long coffeeTypesCount = coffeeTypeBusinessLogic.GetCoffeeTypesCount();
             List<int> coffeeTypeCodes = new List<int>();
 
-            Console.WriteLine("Hi there, I'm your virtual coffee vending machine!");
+            Console.WriteLine("Hi there, I'm your virtual coffee vending machine!\n");
+
+            Console.WriteLine("This machine is accepting only 1€ coins!");
+            Console.WriteLine("Enter a character in order to stop entering coins.\n");
+            Console.Write("Please insert coins:");
+
+            while (code != CashCodes.WrongInput)
+            {
+                InsertCash();
+            }
+
             Console.WriteLine("Please choose from the " + coffeeTypesCount + " types of coffee that I offer:");
             
             foreach(var coffeeType in coffeeTypes)
@@ -44,14 +59,24 @@ namespace CoffeeVendingMachineMS
         private void UsersChoice()
         {
             Console.Write("\nEnter your choice: ");
-            var pickedCoffeeType = Console.ReadLine();
+            var pickedCoffeeCodeS = Console.ReadLine();
 
-            if(!Int32.TryParse(pickedCoffeeType, out pickedCoffeeCode))
+            if(!Int32.TryParse(pickedCoffeeCodeS, out pickedCoffeeCode))
             {
                 Console.WriteLine("Please make sure it's a number from the offered coffees!");
             }
 
             return;
+        }
+
+        public void InsertCash()
+        {
+            code = moneyBusinessLogic.CheckAndUpdateBalance(Console.ReadLine());
+
+            if(code == CashCodes.BelowMinimum)
+            {
+                Console.WriteLine("Not enough money inserted! Returning coins...");
+            }
         }
     }
 }

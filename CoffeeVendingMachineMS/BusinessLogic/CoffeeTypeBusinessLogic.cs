@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CoffeeVendingMachineMS.Repositories
 {
-    public class CoffeeTypeBusinessLogic : ICoffeeTypeRepository
+    public class CoffeeTypeBusinessLogic : ICoffeeTypeBusinessLogic
     {
         private readonly IBaseRepository baseRepository;
 
