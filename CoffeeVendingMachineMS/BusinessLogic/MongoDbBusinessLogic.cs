@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace CoffeeVendingMachineMS.Repositories
 {
-    public class BaseRepository : IBaseRepository
+    public class MongoDbBusinessLogic : IBaseRepository
     {
         public IMongoDatabase Database()
         {

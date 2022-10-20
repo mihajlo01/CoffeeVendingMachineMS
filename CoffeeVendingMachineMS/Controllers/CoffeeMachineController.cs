@@ -6,17 +6,20 @@ using System.Collections.Generic;
 
 namespace CoffeeVendingMachineMS
 {
-    public class CoffeeMachine
+    public class CoffeeMachineController
     {
         private readonly ICoffeeTypeRepository coffeeTypeRepository;
+        static int pickedCoffeeCode = 0;
 
-        public CoffeeMachine()
+        public CoffeeMachineController()
         {
-            coffeeTypeRepository = new CoffeeTypeRepository();
+            coffeeTypeRepository = new CoffeeTypeBusinessLogic();
         }
 
         public void Start()
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             var coffeeTypes = coffeeTypeRepository.GetCoffeeTypes().Result;
             long coffeeTypesCount = coffeeTypeRepository.GetCoffeeTypesCount();
             List<int> coffeeTypeCodes = new List<int>();
@@ -27,26 +30,28 @@ namespace CoffeeVendingMachineMS
             foreach(var coffeeType in coffeeTypes)
             {
                 coffeeTypeCodes.Add(coffeeType.Code);
-                Console.WriteLine(coffeeType.Code + ". " + coffeeType.Name);
+                Console.WriteLine(coffeeType.Code + ". " + coffeeType.Name + " - " + coffeeType.Price + "€");
             }
 
-            var pickedCoffeeType = UsersChoice();
-        }
-
-        private int UsersChoice()
-        {
-            Console.WriteLine("Enter your choice:");
-            var pickedCoffeeType = Console.ReadLine();
-            int pickedCoffeeNumber;
-
-            if(!Int32.TryParse(pickedCoffeeType, out pickedCoffeeNumber))
+            while (!coffeeTypeCodes.Contains(pickedCoffeeCode))
             {
-                Console.WriteLine("Please make sure it's a number from the offered coffees!");
                 UsersChoice();
             }
 
-            Console.WriteLine("Excelent!");
-            return pickedCoffeeNumber;
+
+        }
+
+        private void UsersChoice()
+        {
+            Console.Write("\nEnter your choice: ");
+            var pickedCoffeeType = Console.ReadLine();
+
+            if(!Int32.TryParse(pickedCoffeeType, out pickedCoffeeCode))
+            {
+                Console.WriteLine("Please make sure it's a number from the offered coffees!");
+            }
+
+            return;
         }
     }
 }

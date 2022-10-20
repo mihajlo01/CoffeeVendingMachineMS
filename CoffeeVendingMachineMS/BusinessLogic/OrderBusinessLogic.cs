@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoffeeVendingMachineMS.Repositories
 {
-    public class OrderRepository: IOrderRepository
+    public class OrderBusinessLogic: IOrderRepository
     {
 
     }

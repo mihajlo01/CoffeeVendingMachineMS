@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace CoffeeVendingMachineMS.Repositories
 {
-    public class CoffeeTypeRepository : ICoffeeTypeRepository
+    public class CoffeeTypeBusinessLogic : ICoffeeTypeRepository
     {
         private readonly IBaseRepository baseRepository;
 
-        public CoffeeTypeRepository()
+        public CoffeeTypeBusinessLogic()
         {
-            baseRepository = new BaseRepository();
+            baseRepository = new MongoDbBusinessLogic();
         }
 
         public async Task<IEnumerable<CoffeeType>> GetCoffeeTypes()
