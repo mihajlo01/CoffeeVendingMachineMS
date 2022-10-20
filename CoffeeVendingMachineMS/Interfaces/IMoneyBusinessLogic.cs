@@ -1,4 +1,5 @@
 ﻿using CoffeeVendingMachineMS.Enums;
+using CoffeeVendingMachineMS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace CoffeeVendingMachineMS.Interfaces
         decimal Ballance { get; set; }
         decimal OrderTotal { get; set; }
         public CashCodes CheckAndUpdateBalance(string inserted);
-        public CashCodes CheckOrderPrice(decimal orderPrice);
+        public CashCodes UpdateInitialOrderPrice(decimal orderPrice);
     }
 }

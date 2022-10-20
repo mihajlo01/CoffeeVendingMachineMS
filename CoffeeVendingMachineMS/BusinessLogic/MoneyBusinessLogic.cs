@@ -31,7 +31,6 @@ namespace CoffeeVendingMachineMS.BusinessLogic
         }
 
         private decimal OrderPrice;
-        private AddonsPricing addonsPricing = LoadAddonsPricing();
 
         public MoneyBusinessLogic()
         {
@@ -45,7 +44,7 @@ namespace CoffeeVendingMachineMS.BusinessLogic
 
             if(!Decimal.TryParse(inserted, out insertedCash))
             {
-                if (insertedCash > 2 || !allowedCoins.Contains(insertedCash) || inserted.Contains("-"))
+                if (insertedCash > 2 || (!allowedCoins.Contains(insertedCash) && insertedCash != 0) || inserted.Contains("-"))
                 {
                     return CashCodes.NotValid;
                 }
@@ -70,7 +69,7 @@ namespace CoffeeVendingMachineMS.BusinessLogic
             }
         }
 
-        public CashCodes CheckOrderPrice(decimal orderPrice)
+        public CashCodes UpdateInitialOrderPrice(decimal orderPrice)
         {
             OrderPrice = Convert.ToDecimal(orderPrice);
 
@@ -81,16 +80,8 @@ namespace CoffeeVendingMachineMS.BusinessLogic
             else
             {
                 OrderTotal = OrderPrice;
+                Ballance -= OrderPrice;
                 return CashCodes.AcceptableAmount;
-            }
-        }
-
-        private static AddonsPricing LoadAddonsPricing()
-        {
-            using (StreamReader r = new StreamReader("C:/Users/Mihajlo/source/repos/CoffeeVendingMachineMS/CoffeeVendingMachineMS/addons-pricing.json"))
-            {
-                string json = r.ReadToEnd();
-                return JsonConvert.DeserializeObject<AddonsPricing>(json);
             }
         }
     }

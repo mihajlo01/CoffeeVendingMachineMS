@@ -15,7 +15,7 @@ namespace CoffeeVendingMachineMS.Models
         public string Name { get; set; }
 
         [BsonElement("sugar")]
-        public Sugar Sugar { get; set; }
+        public int Sugar { get; set; }
 
         [BsonElement("milk_dose")]
         public int MilkDose { get; set; }

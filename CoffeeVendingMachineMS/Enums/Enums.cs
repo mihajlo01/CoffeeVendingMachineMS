@@ -16,4 +16,26 @@ namespace CoffeeVendingMachineMS.Enums
         AcceptableAmount = 1,
         ShouldReturn = 2
     }
+
+    public enum AddonTypes
+    {
+        None = 0,
+        Sugar = 1,
+        Milk = 2,
+        Cream = 3,
+        Caramelle = 4
+    }
+
+    public enum SugarAddon
+    {
+        None = 0,
+        One = 1,
+        Two = 2,
+        Three = 3
+    }
+    public enum BaseAddon
+    {
+        None = 0,
+        One = 1
+    }
 }

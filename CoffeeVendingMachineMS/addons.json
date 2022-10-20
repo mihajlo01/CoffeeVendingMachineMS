@@ -1,0 +1,22 @@
+{
+  "sugar": {
+    "code": 1,
+    "name": "Sugar",
+    "price": 0.05
+  },
+  "milk": {
+    "code": 2,
+    "name": "Milk",
+    "price": 0.2
+  },
+  "cream": {
+    "code": 3,
+    "name": "Cream",
+    "price": 0.1
+  },
+  "caramelle": {
+    "code": 4,
+    "name": "Caramelle",
+    "price": 0.5
+  }
+}
