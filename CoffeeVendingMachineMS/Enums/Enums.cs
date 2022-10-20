@@ -8,8 +8,10 @@ namespace CoffeeVendingMachineMS.Enums
 {
     public enum CashCodes
     {
-        WrongInput = -2,
-        BelowMinimum = -1,
+        NotInUseCode = -4,
+        WrongInput = -3,
+        BelowMinimum = -2,
+        NotValid = -1,
         NotEnoughMoney = 0,
         AcceptableAmount = 1,
         ShouldReturn = 2

@@ -27,3 +27,4 @@ C:\Users\Mihajlo\source\repos\CoffeeVendingMachineMS\CoffeeVendingMachineMS\obj\
 C:\Users\Mihajlo\source\repos\CoffeeVendingMachineMS\CoffeeVendingMachineMS\obj\Debug\net5.0\CoffeeVendingMachineMS.pdb
 C:\Users\Mihajlo\source\repos\CoffeeVendingMachineMS\CoffeeVendingMachineMS\obj\Debug\net5.0\CoffeeVendingMachineMS.genruntimeconfig.cache
 C:\Users\Mihajlo\source\repos\CoffeeVendingMachineMS\CoffeeVendingMachineMS\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\Mihajlo\source\repos\CoffeeVendingMachineMS\CoffeeVendingMachineMS\obj\Debug\net5.0\CoffeeVendingMachineMS.csproj.AssemblyReference.cache

@@ -9,7 +9,9 @@ namespace CoffeeVendingMachineMS.Interfaces
 {
     public interface IMoneyBusinessLogic
     {
+        decimal Ballance { get; set; }
+        decimal OrderTotal { get; set; }
         public CashCodes CheckAndUpdateBalance(string inserted);
-        public CashCodes CheckOrderPrice(string orderPrice);
+        public CashCodes CheckOrderPrice(decimal orderPrice);
     }
 }
