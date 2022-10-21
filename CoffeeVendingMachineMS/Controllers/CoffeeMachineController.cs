@@ -1,14 +1,12 @@
 ﻿using CoffeeVendingMachineMS.BusinessLogic;
+using CoffeeVendingMachineMS.Controllers;
 using CoffeeVendingMachineMS.Enums;
 using CoffeeVendingMachineMS.Interfaces;
 using CoffeeVendingMachineMS.Models;
 using CoffeeVendingMachineMS.Repositories;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading;
 
 namespace CoffeeVendingMachineMS
 {
@@ -16,6 +14,8 @@ namespace CoffeeVendingMachineMS
     {
         private readonly ICoffeeTypeBusinessLogic coffeeTypeBusinessLogic;
         private readonly IMoneyBusinessLogic moneyBusinessLogic;
+        private AddonsController addonsController;
+
         public Order order = new Order();
         private CoffeeType pickedCoffeeType = new CoffeeType();
         static int pickedCoffeeCode = 0;
@@ -25,6 +25,7 @@ namespace CoffeeVendingMachineMS
         {
             coffeeTypeBusinessLogic = new CoffeeTypeBusinessLogic();
             moneyBusinessLogic = new MoneyBusinessLogic();
+            addonsController = new AddonsController(moneyBusinessLogic);
         }
 
         public void Start()
@@ -39,7 +40,6 @@ namespace CoffeeVendingMachineMS
 
             Console.WriteLine("This machine is accepting only € coins!");
             Console.WriteLine("Enter a character in order to stop entering coins.\n");
-            Console.Write("Please insert coins:");
 
             while (code != CashCodes.WrongInput)
             {
@@ -49,7 +49,7 @@ namespace CoffeeVendingMachineMS
             Console.Clear();
 
             HelloMessage();
-            Console.WriteLine("Your balance is: " + moneyBusinessLogic.Ballance + "€\n");
+            Console.WriteLine("Your balance is: " + moneyBusinessLogic.Balance + "€\n");
             Console.WriteLine("Please choose from the " + coffeeTypesCount + " types of coffee that I offer:");
             
             foreach(var coffeeType in coffeeTypes)
@@ -64,21 +64,20 @@ namespace CoffeeVendingMachineMS
             }
 
             pickedCoffeeType = coffeeTypes.Where(x => x.Code == pickedCoffeeCode).FirstOrDefault();
-            code = moneyBusinessLogic.UpdateInitialOrderPrice(coffeeTypes.Where(x => x.Code == pickedCoffeeCode).Select(x => x.Price).First());
+            code = moneyBusinessLogic.UpdateOrderPrice(coffeeTypes.Where(x => x.Code == pickedCoffeeCode).Select(x => x.Price).First());
 
             if(code == CashCodes.AcceptableAmount)
             {
                 Console.Clear();
-                Console.WriteLine("Good choice! Now let's spice it up!\n");
-                Console.WriteLine("Your "+ pickedCoffeeType.Name +"contains: Sugar: " + pickedCoffeeType.Sugar + ", MilkDose: " + pickedCoffeeType.MilkDose +
+                Console.WriteLine("Good choice! Now, let's spice it up!\n");
+                Console.WriteLine("Your "+ pickedCoffeeType.Name +" contains: Sugar: " + pickedCoffeeType.Sugar + ", MilkDose: " + pickedCoffeeType.MilkDose +
                     ", Contains Cream: " + pickedCoffeeType.Cream + ", Contains Caramelle: " + pickedCoffeeType.Caramelle);
-                ShowBallance();
-                AskForAddons();
+                addonsController.AskForAddons();
                 Console.ReadLine();
             }
             else
             {
-                System.Environment.Exit(1);
+                
             }
         }
 
@@ -97,50 +96,22 @@ namespace CoffeeVendingMachineMS
 
         public void InsertCash()
         {
+            Console.Write("Insert coins: ");
             code = moneyBusinessLogic.CheckAndUpdateBalance(Console.ReadLine());
 
             if(code == CashCodes.BelowMinimum)
             {
                 Console.WriteLine("Not enough money inserted!");
-                Console.Write("Please insert coins:");
             }
             if(code == CashCodes.NotValid)
             {
                 Console.WriteLine("Your coin is not valid! Please search which coins are valid for the € currency!");
-                Console.Write("Please insert coins:");
             }
-        }
-
-        public void AskForAddons()
-        {
-            var addons = LoadAddons();
-            Console.WriteLine("Would you like to add anything extra?");
-            Console.WriteLine( "0. None");
-            Console.WriteLine(addons.Sugar.Code + ". " + addons.Sugar.Name + " - " + addons.Sugar.Price + "€");
-            Console.WriteLine(addons.Milk.Code + ". " + addons.Milk.Name + " - " + addons.Milk.Price + "€");
-            Console.WriteLine(addons.Cream.Code + ". " + addons.Cream.Name + " - " + addons.Cream.Price + "€");
-            Console.WriteLine(addons.Caramelle.Code + ". " + addons.Caramelle.Name + " - " + addons.Caramelle.Price + "€");
-            Console.Write("Enter the prefered number:");
-            Console.ReadLine();
         }
 
         public void HelloMessage()
         {
             Console.WriteLine("Hi there, I'm your virtual coffee vending machine!\n");
-        }
-        
-        public void ShowBallance()
-        {
-            Console.WriteLine("Your balance is: " + moneyBusinessLogic.Ballance + "€\n");
-        }
-
-        public static Addons LoadAddons()
-        {
-            using (StreamReader r = new StreamReader("C:/Users/Mihajlo/source/repos/CoffeeVendingMachineMS/CoffeeVendingMachineMS/addons.json"))
-            {
-                string json = r.ReadToEnd();
-                return JsonConvert.DeserializeObject<Addons>(json);
-            }
         }
     }
 }

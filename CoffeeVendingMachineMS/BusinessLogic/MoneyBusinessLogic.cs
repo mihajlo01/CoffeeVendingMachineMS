@@ -16,11 +16,11 @@ namespace CoffeeVendingMachineMS.BusinessLogic
     {
         private readonly ICoffeeTypeBusinessLogic coffeeTypeBusinessLogic;
 
-        private decimal _ballance;
-        public decimal Ballance
+        private decimal _balance;
+        public decimal Balance
         {
-            get => _ballance;
-            set => _ballance = value;
+            get => _balance;
+            set => _balance = value;
         }
 
         private decimal _orderTotal;
@@ -50,7 +50,7 @@ namespace CoffeeVendingMachineMS.BusinessLogic
                 }
 
                 var minimumValue = coffeeTypeBusinessLogic.GetCoffeeTypes().Result.OrderByDescending(x => x.Price).LastOrDefault().Price;
-                if (Ballance < minimumValue)
+                if (Balance < minimumValue)
                 {
                     return CashCodes.BelowMinimum;
                 }
@@ -64,23 +64,23 @@ namespace CoffeeVendingMachineMS.BusinessLogic
                     return CashCodes.NotValid;
                 }
 
-                Ballance += insertedCash;
+                Balance += insertedCash;
                 return CashCodes.AcceptableAmount;
             }
         }
 
-        public CashCodes UpdateInitialOrderPrice(decimal orderPrice)
+        public CashCodes UpdateOrderPrice(decimal orderPrice)
         {
             OrderPrice = Convert.ToDecimal(orderPrice);
 
-            if (OrderPrice > Ballance)
+            if (OrderPrice > Balance)
             {
                 return CashCodes.NotEnoughMoney;
             }
             else
             {
-                OrderTotal = OrderPrice;
-                Ballance -= OrderPrice;
+                OrderTotal += OrderPrice;
+                Balance -= OrderPrice;
                 return CashCodes.AcceptableAmount;
             }
         }
