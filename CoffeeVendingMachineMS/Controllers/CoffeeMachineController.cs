@@ -12,28 +12,27 @@ namespace CoffeeVendingMachineMS
 {
     public class CoffeeMachineController
     {
-        private readonly ICoffeeTypeBusinessLogic coffeeTypeBusinessLogic;
-        private readonly IMoneyBusinessLogic moneyBusinessLogic;
+        private readonly ICoffeeTypeRepository coffeeTypeRepository;
+        private readonly IMoneyRepository moneyRepository;
         private AddonsController addonsController;
 
-        public Order order = new Order();
         private CoffeeType pickedCoffeeType = new CoffeeType();
         static int pickedCoffeeCode = 0;
         CashCodes code;
 
         public CoffeeMachineController()
         {
-            coffeeTypeBusinessLogic = new CoffeeTypeBusinessLogic();
-            moneyBusinessLogic = new MoneyBusinessLogic();
-            addonsController = new AddonsController(moneyBusinessLogic);
+            coffeeTypeRepository = new CoffeeTypeRepository();
+            moneyRepository = new MoneyRepository();
+            addonsController = new AddonsController(moneyRepository);
         }
 
         public void Start()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            var coffeeTypes = coffeeTypeBusinessLogic.GetCoffeeTypes().Result;
-            long coffeeTypesCount = coffeeTypeBusinessLogic.GetCoffeeTypesCount();
+            var coffeeTypes = coffeeTypeRepository.GetCoffeeTypes().Result;
+            long coffeeTypesCount = coffeeTypeRepository.GetCoffeeTypesCount();
             List<int> coffeeTypeCodes = new List<int>();
 
             HelloMessage();
@@ -49,7 +48,7 @@ namespace CoffeeVendingMachineMS
             Console.Clear();
 
             HelloMessage();
-            Console.WriteLine("Your balance is: " + moneyBusinessLogic.Balance + "€\n");
+            Console.WriteLine("Your balance is: " + moneyRepository.Balance + "€\n");
             Console.WriteLine("Please choose from the " + coffeeTypesCount + " types of coffee that I offer:");
             
             foreach(var coffeeType in coffeeTypes)
@@ -64,7 +63,7 @@ namespace CoffeeVendingMachineMS
             }
 
             pickedCoffeeType = coffeeTypes.Where(x => x.Code == pickedCoffeeCode).FirstOrDefault();
-            code = moneyBusinessLogic.UpdateOrderPrice(coffeeTypes.Where(x => x.Code == pickedCoffeeCode).Select(x => x.Price).First());
+            code = moneyRepository.UpdateOrderPrice(coffeeTypes.Where(x => x.Code == pickedCoffeeCode).Select(x => x.Price).First());
 
             if(code == CashCodes.AcceptableAmount)
             {
@@ -97,7 +96,7 @@ namespace CoffeeVendingMachineMS
         public void InsertCash()
         {
             Console.Write("Insert coins: ");
-            code = moneyBusinessLogic.CheckAndUpdateBalance(Console.ReadLine());
+            code = moneyRepository.CheckAndUpdateBalance(Console.ReadLine());
 
             if(code == CashCodes.BelowMinimum)
             {

@@ -13,12 +13,11 @@ namespace CoffeeVendingMachineMS.Controllers
 {
     public class AddonsController
     {
-        private readonly IMoneyBusinessLogic moneyBusinessLogic;
-        CashCodes code;
+        private readonly IMoneyRepository moneyRepository;
 
-        public AddonsController(IMoneyBusinessLogic moneyBusinessLogic)
+        public AddonsController(IMoneyRepository moneyRepository)
         {
-            this.moneyBusinessLogic = moneyBusinessLogic;
+            this.moneyRepository = moneyRepository;
         }
 
         public void AskForAddons()
@@ -26,6 +25,8 @@ namespace CoffeeVendingMachineMS.Controllers
             ShowBallance();
             var addons = LoadAddons();
             Console.WriteLine("Would you like to add anything extra?");
+            Console.WriteLine("Enter 0 to finish up topping your coffee :)\n");
+            Console.WriteLine("Choose your addon:");
             Console.WriteLine("0. None");
             foreach (var addon in addons)
             {
@@ -61,7 +62,7 @@ namespace CoffeeVendingMachineMS.Controllers
             else
             {
                 var addonPrice = addons.Where(x => x.Code == addonCode).Select(x => x.Price).First();
-                if(moneyBusinessLogic.UpdateOrderPrice(addonPrice) == CashCodes.NotEnoughMoney)
+                if(moneyRepository.UpdateOrderPrice(addonPrice) == CashCodes.NotEnoughMoney)
                 {
                     Console.WriteLine("Not enough money for the selected option!\n");
                     Console.Write("Please enter again: ");
@@ -74,10 +75,10 @@ namespace CoffeeVendingMachineMS.Controllers
         public void ProcessOrder()
         {
             Console.WriteLine("\nThank you for using this virtual coffee vending machine!\n");
-            Console.WriteLine("Yor order total is: " + moneyBusinessLogic.OrderTotal + "€");
-            if (moneyBusinessLogic.Balance > 0)
+            Console.WriteLine("Yor order total is: " + moneyRepository.OrderTotal + "€");
+            if (moneyRepository.Balance > 0)
             {
-                Console.WriteLine("Yor change is: " + moneyBusinessLogic.Balance + "€");
+                Console.WriteLine("Yor change is: " + moneyRepository.Balance + "€");
             }
 
             Console.WriteLine("Please wait for the order to finish...\n");
@@ -91,7 +92,7 @@ namespace CoffeeVendingMachineMS.Controllers
 
         public void ShowBallance()
         {
-            Console.WriteLine("Your balance is: " + moneyBusinessLogic.Balance + "€\n");
+            Console.WriteLine("Your balance is: " + moneyRepository.Balance + "€\n");
         }
 
         public static List<Addon> LoadAddons()
